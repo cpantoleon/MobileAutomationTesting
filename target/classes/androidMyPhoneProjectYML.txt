@@ -13,3 +13,13 @@ Users:
     Invalid:
         userName: invalidUserName
         password: invalid
+CheckOutInformation:
+    FirstNameValues:
+        firstName1: testFirstName
+        firstName2: Christos
+    LastNameValues:
+        lastName1: testLastName
+        lastName2: ChristosWithLastName
+    ZipCodeValues:
+        zipCode1: "15555"
+        zipCode2: "20000"
