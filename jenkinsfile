@@ -1,0 +1,2 @@
+sdkmanager "system-images;android-33;google_apis;x86_64"
+avdmanager create avd -n Pixel_Fold_API_33 -k "system-images;android-33;google_apis;x86_64" -d pixel_5
