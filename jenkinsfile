@@ -1,2 +1,114 @@
-sdkmanager "system-images;android-33;google_apis;x86_64"
-avdmanager create avd -n Pixel_Fold_API_33 -k "system-images;android-33;google_apis;x86_64" -d pixel_5
+pipeline {
+    agent any
+    environment {
+        ANDROID_HOME = 'C:\\Users\\cpantole\\AppData\\Local\\Android\\Sdk'
+        ANDROID_SDK_ROOT = 'C:\\Users\\cpantole\\AppData\\Local\\Android\\Sdk'
+        PATH = "${ANDROID_HOME}\\emulator;${ANDROID_HOME}\\platform-tools;${ANDROID_HOME}\\tools;${ANDROID_HOME}\\tools\\bin;${PATH}"
+        AVD_NAME = 'Pixel_Fold_API_33'
+        APK_PATH = 'Android.SauceLabs.Mobile.Sample.app.2.7.1.apk'
+    }
+    stages {
+        stage('Setup Emulator') {
+            steps {
+                script {
+                    bat """
+                        echo Checking if Emulator exists...
+                        if not exist "%ANDROID_HOME%\\emulator\\emulator.exe" (
+                            echo ERROR: Emulator not found! Check ANDROID_HOME path.
+                            exit /b 1
+                        )
+                        echo Emulator setup complete.
+                    """
+                }
+            }
+        }
+
+        stage('Install System Image') {
+            steps {
+                script {
+                    bat """
+                        echo Installing Android system image...
+                        sdkmanager "system-images;android-33;google_apis;x86_64"
+                    """
+                }
+            }
+        }
+
+        stage('Create AVD') {
+            steps {
+                script {
+                    bat """
+                        echo Checking if AVD exists...
+                        if not exist "%USERPROFILE%\\.android\\avd\\${AVD_NAME}.avd" (
+                            echo Creating AVD...
+                            avdmanager create avd -n ${AVD_NAME} -k "system-images;android-33;google_apis;x86_64" -d pixel_5
+                        ) else (
+                            echo AVD already exists.
+                        )
+                    """
+                }
+            }
+        }
+
+        stage('Start Emulator') {
+            steps {
+                script {
+                    bat """
+                        echo Starting the emulator...
+                        start /B emulator -avd ${AVD_NAME} -no-window -gpu off -no-audio -no-snapshot-load
+                        timeout /T 60
+                    """
+                }
+            }
+        }
+
+        stage('Verify Emulator') {
+            steps {
+                script {
+                    bat """
+                        echo Checking if emulator is running...
+                        adb wait-for-device
+                        adb devices
+                    """
+                }
+            }
+        }
+
+        stage('Install APK') {
+            steps {
+                script {
+                    bat """
+                        echo Installing APK...
+                        adb install -r ${APK_PATH} || echo APK installation failed!
+                    """
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    bat 'mvn clean test'
+                }
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                script {
+                    bat """
+                        echo Stopping Emulator...
+                        adb -s emulator-5554 emu kill
+                        echo Cleanup complete.
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Pipeline completed!"
+        }
+    }
+}
