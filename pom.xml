@@ -134,6 +134,11 @@
             <id>central</id>
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
+
+        <repository>
+            <id>simpligility</id>
+            <url>https://oss.sonatype.org/content/repositories/simpligility-maven-public/</url>
+        </repository>
     </repositories>
 
     <build>
@@ -165,6 +170,19 @@
                         <include>**/RunCucumberTest.java</include>
                     </includes>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.dcendents</groupId>
+                <artifactId>android-maven-gradle-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>install</goal>  <!-- Install APK on the emulator -->
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Serenity Maven Plugin -->

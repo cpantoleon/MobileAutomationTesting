@@ -1,7 +1,0 @@
-project\test\swag\locators\Application.class
-project\test\swag\utils\YamlConfigReader.class
-project\test\swag\actions\LoginActions.class
-project\test\swag\actions\AppUI.class
-project\test\swag\locators\Login.class
-project\test\swag\utils\Wait.class
-project\test\swag\questions\LoginQuestions.class
