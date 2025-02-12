@@ -1,0 +1,82 @@
+pipeline {
+    agent any
+    environment {
+        EMULATOR_DEVICE = "Samsung Galaxy S10" // Update this to a newer device if needed
+        APK_PATH = "C:/Users/cpantole/apk-files/Android.apk"
+        WORKSPACE_PATH = "C:/Jenkins/workspace/mobile_test" // Updated workspace without spaces
+    }
+    stages {
+        stage('Start Fresh Docker Container') {
+            steps {
+                script {
+                    echo "Removing any existing container..."
+                    bat 'docker rm -f android-container || echo No container to remove'
+                    
+                    echo "Starting a new container..."
+                    bat """
+                        docker run -d -p 6080:6080 -p 4723:4723 -e EMULATOR_DEVICE="${EMULATOR_DEVICE}" -e WEB_VNC=true --device /dev/kvm -v C:/Users/cpantole/apk-files:/apk-files -v C:/Jenkins/workspace/mobile_test:/tests --name android-container budtmo/docker-android
+                    """
+                }
+            }
+        }
+
+        stage('Wait for Emulator to Start') {
+            steps {
+                script {
+                    echo "Waiting for emulator to be ready (2 minutes)..."
+                    bat 'ping -n 120 127.0.0.1 1>nul' // Wait 2 minutes
+                }
+            }
+        }
+
+        stage('Install APK via ADB Inside Container') {
+            steps {
+                script {
+                    echo "Connecting to emulator..."
+                    bat 'docker exec android-container adb connect localhost:5555'
+                    echo "Installing APK..."
+                    bat 'docker exec android-container adb -s emulator-5554 install /apk-files/Android.apk'
+                }
+            }
+        }
+
+        stage('Setup & Start Appium') {
+            steps {
+                script {
+                    echo "Starting Appium server..."
+                    bat """
+                        docker exec -d android-container bash -c 'appium --address 0.0.0.0 --port 4723 --use-plugins "base64,flash"'
+                    """
+                }
+            }
+        }
+
+        stage('Install Maven & Run Cucumber Tests') {
+            steps {
+                script {
+                    echo "Installing Maven and Java in the container..."
+                    bat """
+                        docker exec android-container bash -c 'apt-get update && apt-get install -y maven openjdk-11-jdk'
+                    """
+                    
+                    echo "Running Cucumber tests..."
+                    bat 'docker exec android-container bash -c "cd /tests && mvn clean test -Dtest=project.test.swag.runners.testRunner"'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                echo "Stopping Appium server..."
+                // Ensure no error occurs if Appium isn't running
+                bat 'docker exec android-container pkill -f appium || echo No Appium server running'
+                
+                echo "Cleaning up Docker container..."
+                // Check if the container is still running and force remove it if necessary
+                bat 'docker rm -f android-container || echo No container to remove'
+            }
+        }
+    }
+}
