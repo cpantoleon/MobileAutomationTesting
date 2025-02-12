@@ -194,6 +194,7 @@
                         <!-- Skip the installation phase during this profile -->
                         <execution>
                             <goals>
+                                     <goal>aggregate</goal>
                                 <!-- Comment out or exclude the plugin goal -->
                                 <!-- <goal>install</goal> -->
                         </goals>
