@@ -191,9 +191,11 @@
                 <artifactId>serenity-maven-plugin</artifactId>
                 <version>${serenity.version}</version>
                 <executions>
-                    <execution>
-                        <goals>
-                            <goal>aggregate</goal>
+                        <!-- Skip the installation phase during this profile -->
+                        <execution>
+                            <goals>
+                                <!-- Comment out or exclude the plugin goal -->
+                                <!-- <goal>install</goal> -->
                         </goals>
                     </execution>
                 </executions>
