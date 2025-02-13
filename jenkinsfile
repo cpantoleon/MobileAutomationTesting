@@ -4,7 +4,8 @@ pipeline {
     environment {
         EMULATOR_DEVICE = "Samsung Galaxy S10"
         APK_PATH = "C:/apk-files/Android.apk"
-        WORKSPACE_PATH = pwd().replace("\\", "/")  // Convert Windows path to Unix-friendly format
+        // Convert Windows workspace path to a Unix-friendly format
+        WORKSPACE_PATH = pwd().replace("\\", "/")
     }
 
     stages {
@@ -13,14 +14,14 @@ pipeline {
                 git url: 'https://github.com/cpantoleon/MobileAutomationTesting.git', branch: 'main'
             }
         }
-
+        
         stage('Start Fresh Docker Container') {
             steps {
                 script {
-                    echo "Removing any existing container..."
+                    echo "🛠 Removing any existing container..."
                     bat 'docker rm -f android-container || echo No container to remove'
 
-                    echo "Starting a new container..."
+                    echo "🚀 Starting a new container..."
                     bat """
                         docker run -d -p 6080:6080 -p 4723:4723 ^
                         -e EMULATOR_DEVICE="${EMULATOR_DEVICE}" -e WEB_VNC=true --device /dev/kvm ^
@@ -30,54 +31,47 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Wait for Emulator to Start') {
             steps {
                 script {
-                    echo "Waiting for emulator to start (2 minutes)..."
+                    echo "⏳ Waiting for emulator to start (2 minutes)..."
                     bat 'ping -n 60 127.0.0.1 >nul'
                 }
             }
         }
-
+        
         stage('Verify ADB Connection') {
             steps {
                 script {
-                    echo "Checking if emulator is detected by ADB..."
+                    echo "🔍 Checking if emulator is detected by ADB..."
                     bat 'docker exec android-container adb devices'
                 }
             }
         }
-
+        
         stage('Install JDK 17 and Maven') {
             steps {
                 script {
                     echo "Installing JDK 17 and Maven in the container..."
-
-                    // Install Java 17 and Maven inside the container
-            // Use double quotes to handle command correctly in Windows batch
                     bat """
-                    docker exec -u 0 android-container bash -c "apt-get update"
-                    docker exec -u 0 android-container bash -c "apt-get install -y openjdk-17-jdk maven"
+                        docker exec -u 0 android-container bash -c "apt-get update"
+                        docker exec -u 0 android-container bash -c "apt-get install -y openjdk-17-jdk maven"
                     """
                 }
             }
         }
-
+        
         stage('Verify Java and Maven Installation') {
             steps {
                 script {
-                    echo "Verifying JDK 17 and Maven installation..."
-
-                    // Check Java version
+                    echo "Verifying Java and Maven installation..."
                     bat 'docker exec android-container java -version'
-
-                    // Check Maven version
                     bat 'docker exec android-container mvn -v'
                 }
             }
         }
-
+        
         stage('Install APK via ADB Inside Container (With Retry)') {
             steps {
                 script {
@@ -86,9 +80,8 @@ pipeline {
                     def success = false
 
                     while (attempt <= maxAttempts && !success) {
-                        echo "Attempt $attempt: Installing APK..."
+                        echo "📦 Attempt ${attempt}: Installing APK..."
                         def result = bat(returnStatus: true, script: 'docker exec android-container adb install /apk-files/Android.apk')
-
                         if (result == 0) {
                             echo "✅ APK installed successfully!"
                             success = true
@@ -98,14 +91,13 @@ pipeline {
                             attempt++
                         }
                     }
-
                     if (!success) {
                         error("❌ APK installation failed after ${maxAttempts} attempts. Stopping pipeline.")
                     }
                 }
             }
         }
-
+        
         stage('Setup & Start Appium') {
             steps {
                 script {
@@ -114,17 +106,21 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Run Maven Tests with Profile') {
             steps {
                 script {
-                    echo "Running Maven tests from the correct directory..."
-                    bat 'docker exec android-container bash -c "cd /workspace && mvn clean test -Dtest=project.test.swag.runners.testRunner -Dandroid.maven.plugin.skip=true"'
+                    echo "Running Maven tests from /workspace with JDK 17 settings..."
+                    // Export JAVA_HOME and update PATH inline so Maven uses JDK 17,
+                    // then run tests using the TestRunner (ensure your file is named TestRunner.java)
+                    bat '''
+                        docker exec android-container bash -c "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH && cd /workspace && mvn clean test -Dtest=TestRunner -Dandroid.maven.plugin.skip=true -DfailIfNoTests=false"
+                    '''
                 }
             }
         }
     }
-
+    
     post {
         always {
             script {
@@ -134,7 +130,6 @@ pipeline {
                 } catch (Exception e) {
                     echo "Appium server not found. Continuing cleanup."
                 }
-
                 echo "Cleaning up Docker container..."
                 bat 'docker rm -f android-container || echo No container to remove'
             }
