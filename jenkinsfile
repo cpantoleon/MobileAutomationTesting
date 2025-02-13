@@ -1,27 +1,19 @@
 pipeline {
     agent any
+
     environment {
         EMULATOR_DEVICE = "Samsung Galaxy S10"
-        APK_PATH = "C:/apk-files/Android.apk"  // Use a simple path
-        WORKSPACE_PATH = "C:/Jenkins/workspace/mobile_test/MobileAutomationTesting"  // Update the path to match your directory structure
+        APK_PATH = "C:/apk-files/Android.apk"
+        // Dynamically get the Jenkins workspace path (adjust if needed)
+        WORKSPACE_PATH = pwd().replace("\\", "/")
     }
+
     stages {
         stage('Checkout Maven Project') {
             steps {
                 git url: 'https://github.com/cpantoleon/MobileAutomationTesting.git', branch: 'main'
             }
         }
-        
-stage('Debug: List Cloned Files') {
-    steps {
-        script {
-            echo "Listing files in the MobileAutomationTesting directory..."
-            bat 'dir "C:/Jenkins/workspace/mobile_test/MobileAutomationTesting"'
-        }
-    }
-}
-
-
 
         stage('Start Fresh Docker Container') {
             steps {
@@ -31,7 +23,10 @@ stage('Debug: List Cloned Files') {
 
                     echo "Starting a new container..."
                     bat """
-                        docker run -d -p 6080:6080 -p 4723:4723 -e EMULATOR_DEVICE="${EMULATOR_DEVICE}" -e WEB_VNC=true --device /dev/kvm -v C:/apk-files:/apk-files -v C:/Jenkins/workspace/mobile_test/MobileAutomationTesting:/tests --name android-container budtmo/docker-android
+                        docker run -d -p 6080:6080 -p 4723:4723 ^
+                        -e EMULATOR_DEVICE="${EMULATOR_DEVICE}" -e WEB_VNC=true --device /dev/kvm ^
+                        -v "${WORKSPACE_PATH}:/workspace" -v "C:/apk-files:/apk-files" ^
+                        --name android-container budtmo/docker-android
                     """
                 }
             }
@@ -40,17 +35,61 @@ stage('Debug: List Cloned Files') {
         stage('Wait for Emulator to Start') {
             steps {
                 script {
-                    echo "Waiting for emulator to start..."
+                    echo "Waiting for emulator to start (2 minutes)..."
                     bat 'ping -n 120 127.0.0.1 >nul'
                 }
             }
         }
 
-        stage('Install APK via ADB Inside Container') {
+        stage('Verify ADB Connection') {
             steps {
                 script {
-                    echo "Installing APK..."
-                    bat 'docker exec android-container adb install /apk-files/Android.apk'
+                    echo "Checking if emulator is detected by ADB..."
+                    bat 'docker exec android-container adb devices'
+                }
+            }
+        }
+
+        stage('Clean and Recreate Target Directory') {
+            steps {
+                script {
+                    echo "Cleaning target directory..."
+                    // Remove the entire target directory
+                    bat 'docker exec android-container bash -c "rm -rf /workspace/target || echo No target directory to clean"'
+                    
+                    echo "Recreating target directory with proper permissions..."
+                    bat 'docker exec android-container bash -c "mkdir -p /workspace/target && chmod -R 777 /workspace/target"'
+                    
+                    echo "Listing target directory contents..."
+                    bat 'docker exec android-container bash -c "ls -l /workspace/target"'
+                }
+            }
+        }
+
+        stage('Install APK via ADB Inside Container (With Retry)') {
+            steps {
+                script {
+                    def maxAttempts = 5
+                    def attempt = 1
+                    def success = false
+
+                    while (attempt <= maxAttempts && !success) {
+                        echo "Attempt $attempt: Installing APK..."
+                        def result = bat(returnStatus: true, script: 'docker exec android-container adb install /apk-files/Android.apk')
+
+                        if (result == 0) {
+                            echo "✅ APK installed successfully!"
+                            success = true
+                        } else {
+                            echo "❌ APK installation failed. Retrying in 5 seconds..."
+                            sleep(5)
+                            attempt++
+                        }
+                    }
+
+                    if (!success) {
+                        error("❌ APK installation failed after ${maxAttempts} attempts. Stopping pipeline.")
+                    }
                 }
             }
         }
@@ -68,11 +107,10 @@ stage('Debug: List Cloned Files') {
             steps {
                 script {
                     echo "Installing Maven and Java (JDK 17) in the container..."
-                    bat """
-                        docker exec -u 0 android-container bash -c "apt-get update && apt-get install -y maven openjdk-17-jdk"
-                    """
-                    echo "Running Maven tests..."
-                    bat 'docker exec android-container bash -c "cd /tests && mvn clean test -Dtest=project.test.swag.runners.testRunner -Dandroid.maven.plugin.skip=true"'
+                    bat 'docker exec -u 0 android-container bash -c "apt-get update && apt-get install -y maven openjdk-17-jdk"'
+
+                    echo "Running Maven tests from the correct directory..."
+                    bat 'docker exec android-container bash -c "cd /workspace && ls && mvn clean test -Dtest=project.test.swag.runners.testRunner -Dandroid.maven.plugin.skip=true -Dmaven.clean.failOnError=false"'
                 }
             }
         }
@@ -87,7 +125,6 @@ stage('Debug: List Cloned Files') {
                 } catch (Exception e) {
                     echo "Appium server not found. Continuing cleanup."
                 }
-
                 echo "Cleaning up Docker container..."
                 bat 'docker rm -f android-container || echo No container to remove'
             }
