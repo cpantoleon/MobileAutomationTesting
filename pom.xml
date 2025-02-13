@@ -134,11 +134,6 @@
             <id>central</id>
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
-
-        <repository>
-            <id>simpligility</id>
-            <url>https://oss.sonatype.org/content/repositories/simpligility-maven-public/</url>
-        </repository>
     </repositories>
 
     <build>
@@ -172,31 +167,15 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>com.github.dcendents</groupId>
-                <artifactId>android-maven-gradle-plugin</artifactId>
-                <version>1.5</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>install</goal>  <!-- Install APK on the emulator -->
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!-- Serenity Maven Plugin -->
             <plugin>
                 <groupId>net.serenity-bdd.maven.plugins</groupId>
                 <artifactId>serenity-maven-plugin</artifactId>
                 <version>${serenity.version}</version>
                 <executions>
-                        <!-- Skip the installation phase during this profile -->
-                        <execution>
-                            <goals>
-                                     <goal>aggregate</goal>
-                                <!-- Comment out or exclude the plugin goal -->
-                                <!-- <goal>install</goal> -->
+                    <execution>
+                        <goals>
+                            <goal>aggregate</goal>
                         </goals>
                     </execution>
                 </executions>
