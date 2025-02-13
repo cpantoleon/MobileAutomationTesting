@@ -4,7 +4,7 @@ pipeline {
     environment {
         EMULATOR_DEVICE = "Samsung Galaxy S10"
         APK_PATH = "C:/apk-files/Android.apk"
-        // Convert Windows workspace path to a Unix-friendly format
+        // Convert Windows workspace path to Unix-friendly format
         WORKSPACE_PATH = pwd().replace("\\", "/")
     }
 
@@ -65,7 +65,7 @@ pipeline {
         stage('Verify Java and Maven Installation') {
             steps {
                 script {
-                    echo "Verifying Java and Maven installation..."
+                    echo "Verifying JDK 17 and Maven installation..."
                     bat 'docker exec android-container java -version'
                     bat 'docker exec android-container mvn -v'
                 }
@@ -111,10 +111,8 @@ pipeline {
             steps {
                 script {
                     echo "Running Maven tests from /workspace with JDK 17 settings..."
-                    // Export JAVA_HOME and update PATH inline so Maven uses JDK 17,
-                    // then run tests using the TestRunner (ensure your file is named TestRunner.java)
                     bat '''
-                        docker exec android-container bash -c "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH && cd /workspace && mvn clean test -Dtest=TestRunner -Dandroid.maven.plugin.skip=true -DfailIfNoTests=false"
+                        docker exec android-container bash -c "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH && cd /workspace && mvn clean test -Dtest=project.test.swag.runners.TestRunner -Dandroid.maven.plugin.skip=true -DfailIfNoTests=false"
                     '''
                 }
             }
