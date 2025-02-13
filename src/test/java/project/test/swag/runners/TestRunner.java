@@ -4,6 +4,7 @@ import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import io.cucumber.picocontainer.PicoFactory;
 import org.junit.runner.RunWith;
+import org.junit.BeforeClass;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
@@ -17,5 +18,5 @@ public class TestRunner {
         @BeforeClass
         public static void setup() {
                 System.out.println("Test execution started...");
-    }
+        }
 }
