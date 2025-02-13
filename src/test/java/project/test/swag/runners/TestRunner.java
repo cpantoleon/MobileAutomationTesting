@@ -1,12 +1,11 @@
 package project.test.swag.runners;
 
-import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.platform.engine.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import io.cucumber.picocontainer.PicoFactory;
-import org.junit.jupiter.api.BeforeAll;  // <-- JUnit 5 BeforeAll
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
 
-@RunWith(Cucumber.class)
+@Cucumber  // JUnit 5's integration with Cucumber
 @CucumberOptions(
         objectFactory = PicoFactory.class,
         features = "src/test/resources/features",
@@ -16,8 +15,8 @@ import org.junit.runner.RunWith;
 )
 public class TestRunner {
 
-        @BeforeAll  // <-- Change to BeforeAll for JUnit 5
-        public static void setup() {
-                System.out.println("Test execution started...");
-        }
+    @BeforeAll  // JUnit 5's BeforeAll
+    public static void setup() {
+        System.out.println("Test execution started...");
+    }
 }
