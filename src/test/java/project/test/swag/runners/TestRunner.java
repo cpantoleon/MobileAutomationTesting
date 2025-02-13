@@ -3,8 +3,8 @@ package project.test.swag.runners;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import io.cucumber.picocontainer.PicoFactory;
+import org.junit.jupiter.api.BeforeAll;  // <-- JUnit 5 BeforeAll
 import org.junit.runner.RunWith;
-import org.junit.BeforeClass;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
@@ -15,7 +15,8 @@ import org.junit.BeforeClass;
         monochrome = true
 )
 public class TestRunner {
-        @BeforeClass
+
+        @BeforeAll  // <-- Change to BeforeAll for JUnit 5
         public static void setup() {
                 System.out.println("Test execution started...");
         }
