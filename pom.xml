@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -16,9 +15,33 @@
         <spring-boot.version>3.2.1</spring-boot.version>
         <serenity.version>4.0.12</serenity.version>
         <cucumber.version>7.11.0</cucumber.version>
+        <yaml.version>2.0</yaml.version>
+        <guava.version>32.0.1-jre</guava.version>
     </properties>
 
     <dependencies>
+        <!-- ✅ FIX: Added Missing SnakeYAML Dependency -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${yaml.version}</version>
+        </dependency>
+
+        <!-- ✅ FIX: Added Cucumber PicoContainer for Dependency Injection -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-picocontainer</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- ✅ FIX: Added Google Guava (Prevents Missing Dependency Issues) -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
         <!-- Appium Java Client -->
         <dependency>
             <groupId>io.appium</groupId>
