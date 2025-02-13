@@ -13,5 +13,5 @@ import org.junit.runner.RunWith;
         plugin = { "pretty", "html:target/Test.html", "json:target/Test.json" },
         monochrome = true
 )
-public class testRunner {
+public class TestRunner {
 }
