@@ -185,6 +185,12 @@
                             <goal>integration-test</goal>
                             <goal>verify</goal>
                         </goals>
+                        <configuration>
+                           <!-- Include TestRunner explicitly -->
+                           <includes>
+                              <include>**/TestRunner.java</include>
+                           </includes>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
