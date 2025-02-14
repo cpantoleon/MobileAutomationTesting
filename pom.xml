@@ -134,6 +134,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>5.8.2</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Spring Context (for @Autowired and Dependency Injection) -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -164,22 +171,10 @@
 
             <!-- Maven Surefire Plugin for running Cucumber tests -->
             <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-surefire-plugin</artifactId>
-    <version>2.21.0</version>
-    <dependencies>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-surefire-provider</artifactId>
-            <version>1.2.0-M1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.2.0-M1</version>
-        </dependency>
-    </dependencies>
-</plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+            </plugin>
 
 
             <!-- Maven Failsafe Plugin for Integration Tests -->
@@ -194,10 +189,10 @@
                             <goal>verify</goal>
                         </goals>
                         <configuration>
-                           <!-- Include TestRunner explicitly -->
-                           <includes>
-                              <include>**/TestRunner.java</include>
-                           </includes>
+                            <!-- Include TestRunner explicitly -->
+                            <includes>
+                                <include>**/TestRunner.java</include>
+                            </includes>
                         </configuration>
                     </execution>
                 </executions>
