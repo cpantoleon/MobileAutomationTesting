@@ -112,7 +112,9 @@ pipeline {
                 script {
                     echo "Running Maven tests from /workspace with JDK 17 settings..."
                     bat '''
-                        docker exec android-container bash -c "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH && cd /workspace && mvn clean test -Dtest=project.test.swag.runners.TestRunner -Dandroid.maven.plugin.skip=true -DfailIfNoTests=false"
+                        docker exec android-container bash -c "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH && cd /workspace && mvn clean verify -Dcucumber.plugin=pretty -Dandroid.maven.plugin.skip=true"
+                        docker exec android-container ls -l /workspace/src/test/java/project/test/swag/stepDef
+                        docker exec android-container ls -l /workspace/src/test/java/project/test/swag/runners
                     '''
                 }
             }
