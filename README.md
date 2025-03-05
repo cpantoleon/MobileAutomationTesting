@@ -210,11 +210,73 @@ cd MobileAutomationTesting
 ```
 
 ### 2. Install Dependencies
+Install the necessary project dependencies using Maven:
 ```sh
 mvn clean install
 ```
 
-### 3. Run Tests Locally
+### 3. Install Appium
+You need **Appium** installed to run the mobile tests. You can install it globally via npm:
+
+**Install Node.js (if not already installed)**
+Download and install Node.js from [nodejs.org](https://nodejs.org/en).
+
+**Install Appium**
+After installing Node.js, install **Appium** globally using the following command:
+```sh
+npm install -g appium
+```
+**Start the Appium Server with Custom Configuration**
+To run Appium with the specific address, port, and base path as required, use this command:
+```sh
+appium --address 0.0.0.0 --port 4723 --base-path /wd/hub
+```
+This command starts the Appium server and makes it listen on `0.0.0.0` (accessible from any IP address), at port `4723`, with a custom base path of `/wd/hub`.
+
+### 4. Set Up an Android Emulator
+You can run tests using either an Android Emulator or a real device. Here's how to set up an Android Emulator:
+
+#### Install Android Studio
+1. Download and install **Android Studio** from [here](https://developer.android.com/studio).
+2. Open **Android Studio** and go to **Configure** → **SDK Manager**.
+3. In the **SDK Tools** tab, check the box for **Android Emulator** and **Android SDK** (if not already installed).
+4. Click **Apply** to install the necessary components.
+
+#### Install the APK on the Emulator
+
+After setting up the **Android Emulator**, you can install the **APK** onto it. Here's how:
+
+1. **Build the APK**: 
+   - Ensure you have the APK file that you want to install on the emulator. If you don't have it, you may need to build the app first.
+
+2. **Start the Emulator**: 
+   - Ensure your **Android Emulator** is running.
+
+3. **Install the APK**:
+   - Open a terminal window and use the following command to install the APK onto the running emulator:
+
+   ```sh
+   adb -s <emulator_name> install <path_to_your_apk>.apk
+  ```
+
+#### Create an Emulator
+1. Open **AVD Manager** (Android Virtual Device Manager) from **Android Studio**.
+2. Click **Create Virtual Device** and choose a device model (e.g., **Pixel 4**).
+3. Select a **System Image** (e.g., **Android 11**) and click **Next**.
+4. Configure the emulator settings and click **Finish**.
+
+#### Start the Emulator
+Start the emulator either through **Android Studio** or using the **AVD Manager**.
+
+Alternatively, you can start the emulator using the following command from the terminal:
+
+```sh
+emulator -avd <name_of_your_avd>
+```
+
+### 5. Run Tests Locally
+After setting up **Appium** and the **Android Emulator**, you can run your tests locally. Use the following Maven command to run the tests:
+
 ```sh
 mvn clean test -Dcucumber.plugin=pretty
 ```
