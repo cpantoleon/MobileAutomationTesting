@@ -290,10 +290,6 @@ mvn clean test -Dcucumber.plugin=pretty
    - Start the **Appium server**
    - Execute the **Cucumber tests**
 
-### Trigger the Jenkins Pipeline
-- Configure Jenkins to pull the repository.
-- Run the pipeline script defined in `Jenkinsfile`.
-
 ## Logs & Reports
 ### Serenity Reports
 After running tests, Serenity generates an HTML report.
