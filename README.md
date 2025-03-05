@@ -38,6 +38,28 @@ Additionally, a **Jenkins pipeline** is included to automate the setup of a **Do
 5. **Docker** (For running Android emulator inside a container)
 6. **Jenkins** (If running tests via CI/CD pipeline)
 
+### Installing Docker on Windows (Using WSL)
+If you are using **Windows**, install and update **Windows Subsystem for Linux (WSL)** before installing Docker:
+```sh
+wsl --install
+wsl --update
+```
+Then, proceed with Docker installation from [Docker's official site](https://www.docker.com/).
+
+## Jenkins Configuration
+To set up Jenkins for running the pipeline:
+1. Install **Jenkins** from [Jenkins Official Site](https://www.jenkins.io/download/).
+2. Install required **Jenkins Plugins**:
+   - **Pipeline**
+   - **Git**
+   - **Docker Pipeline**
+3. Create a new **Pipeline Job**:
+   - Go to Jenkins Dashboard → New Item → Pipeline.
+   - In **Pipeline Definition**, select **Pipeline script from SCM**.
+   - Provide the **Git repository URL**.
+   - Ensure the **Branch** is set to `main`.
+   - Click **Save** and trigger a build.
+
 ## Installation & Setup
 ### 1. Clone the Repository
 ```sh
