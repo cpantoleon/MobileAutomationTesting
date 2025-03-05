@@ -257,7 +257,7 @@ After setting up the **Android Emulator**, you can install the **APK** onto it. 
 
    ```sh
    adb -s <emulator_name> install <path_to_your_apk>.apk
-  ```
+   ```
 
 #### Create an Emulator
 1. Open **AVD Manager** (Android Virtual Device Manager) from **Android Studio**.
