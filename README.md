@@ -26,7 +26,6 @@ Additionally, a **Jenkins pipeline** is included to automate the setup of a **Do
 |   |-- stepDef  # Step Definitions for Cucumber Scenarios
 |   |-- runners  # Cucumber Test Runners
 |-- pom.xml  # Maven Configuration with Dependencies
-|-- Jenkinsfile  # Jenkins Pipeline Configuration
 ```
 
 ## Prerequisites
