@@ -39,59 +39,39 @@ Additionally, a **Jenkins pipeline** is included to automate the setup of a **Do
 
 # Java and Maven Setup on Windows
 
-## 1. Java Setup on Windows
+## Java Setup on Windows
 
 ### Official Java Installation (Oracle JDK)
 - [Download Oracle JDK](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
-  - Official page to download and install Oracle JDK on Windows.
 
 ### OpenJDK Installation on Windows
 - [OpenJDK Downloads](https://adoptopenjdk.net/)
-  - Official page to install OpenJDK for Windows.
 
 ### Setting the JAVA_HOME Environment Variable
-- [How to Set JAVA_HOME on Windows]([https://www.baeldung.com/java/set-java-home-windows](https://www.baeldung.com/java-home-on-windows-mac-os-x-linux))
-  - A detailed tutorial on how to set the JAVA_HOME environment variable for Windows.
+- [How to Set JAVA_HOME on Windows](https://www.baeldung.com/java-home-on-windows-mac-os-x-linux)
     
 ---
 
-## 2. Maven Setup on Windows
+## Maven Setup on Windows
 
 ### Official Maven Installation Guide
 - [Maven Installation Guide for Windows](https://maven.apache.org/install.html)
-  - Official documentation for installing Maven on Windows.
-
-### Setting Up Maven on Windows
-- [Installing Maven on Windows](https://www.baeldung.com/maven/maven-windows-setup)
-  - A step-by-step guide to installing Maven on Windows, including configuring the MAVEN_HOME environment variable and adding it to the PATH.
-
+ 
+### Configure Maven
+- [Configuration of Maven](https://www.qamadness.com/knowledge-base/how-to-install-maven-and-configure-environment-variables/)
+    
 ### Configuring settings.xml in Maven
 - [Maven settings.xml Documentation](https://maven.apache.org/settings.html)
-  - Official Maven documentation that explains how to configure the settings.xml file for your project.
-
-### Maven settings.xml File Example
-- [Sample Maven settings.xml](https://github.com/apache/maven/blob/master/settings.xml)
-  - Example of a default settings.xml file provided by the Maven project on GitHub.
-
-### Using Maven in Windows Command Prompt
-- [Running Maven on Windows](https://maven.apache.org/running.html)
-  - Official guide to get started with Maven, including how to run it in Windows Command Prompt.
 
 ---
 
-## 3. Configuring settings.xml for Maven on Windows
+## Configuring settings.xml for Maven on Windows
 
 ### What is settings.xml and How to Configure It
 - [Understanding settings.xml](https://maven.apache.org/settings.html)
-  - Overview and configuration guide for the Maven settings.xml file.
 
 ### Configuring Maven's settings.xml for Proxy, Repository, and Authentication
 - [Maven Proxy & Authentication Settings](https://maven.apache.org/guides/mini/guide-proxies.html)
-  - A detailed tutorial on how to set up the settings.xml file, including configuring proxies, mirrors, and repositories.
-
-### Maven Profile Configuration in settings.xml
-- [Maven Profiles](https://maven.apache.org/guides/mini/guide-profiles.html)
-  - How to define and use Maven profiles in your settings.xml file, which can be useful for different build configurations.
 
 ---
 
