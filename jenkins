@@ -26,7 +26,7 @@ pipeline {
                         docker run -d -p 6080:6080 -p 4723:4723 ^
                         -e EMULATOR_DEVICE="${EMULATOR_DEVICE}" -e WEB_VNC=true --device /dev/kvm ^
                         -v "${WORKSPACE_PATH}:/workspace" -v "C:/apk-files:/apk-files" ^
-                        --name android-container budtmo/docker-android
+                        --name android-container budtmo/docker-android:emulator_14.0
                     """
                 }
             }
