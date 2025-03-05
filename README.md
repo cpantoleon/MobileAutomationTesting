@@ -295,7 +295,7 @@ mvn clean test -Dcucumber.plugin=pretty
 After running tests, Serenity generates an HTML report.
 Find reports in:
 ```
-target/site/serenity/index.html
+target/test.html
 ```
 
 ## Cleanup
