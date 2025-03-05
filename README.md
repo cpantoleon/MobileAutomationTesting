@@ -50,13 +50,9 @@ Additionally, a **Jenkins pipeline** is included to automate the setup of a **Do
   - Official page to install OpenJDK for Windows.
 
 ### Setting the JAVA_HOME Environment Variable
-- [How to Set JAVA_HOME on Windows](https://www.baeldung.com/java/set-java-home-windows)
+- [How to Set JAVA_HOME on Windows]([https://www.baeldung.com/java/set-java-home-windows](https://www.baeldung.com/java-home-on-windows-mac-os-x-linux))
   - A detailed tutorial on how to set the JAVA_HOME environment variable for Windows.
-
-### Managing Multiple Java Versions on Windows
-- [Managing Multiple JDK Versions on Windows](https://www.baeldung.com/java/manage-multiple-java-versions)
-  - A guide on managing multiple Java versions, including how to switch between them using environment variables on Windows.
-
+    
 ---
 
 ## 2. Maven Setup on Windows
