@@ -61,16 +61,6 @@ Additionally, a **Jenkins pipeline** is included to automate the setup of a **Do
 
 ---
 
-## Configuring settings.xml for Maven on Windows
-
-### What is settings.xml and How to Configure It
-- [Understanding settings.xml](https://maven.apache.org/settings.html)
-
-### Configuring Maven's settings.xml for Proxy, Repository, and Authentication
-- [Maven Proxy & Authentication Settings](https://maven.apache.org/guides/mini/guide-proxies.html)
-
----
-
 ## Summary
 
 - **Java Setup**: Install Java JDK and set JAVA_HOME.
