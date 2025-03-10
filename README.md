@@ -179,7 +179,6 @@ pipeline {
     environment {
         EMULATOR_DEVICE = "Samsung Galaxy S10"
         APK_PATH = "${WORKSPACE}/Android.SauceLabs.Mobile.Sample.app.2.7.1.apk"
-        // Convert Windows workspace path to Unix-friendly format
         WORKSPACE_PATH = pwd().replace("\\", "/")
     }
 
@@ -200,7 +199,7 @@ pipeline {
                     bat """
                         docker run -d -p 6080:6080 -p 4723:4723 ^
                         -e EMULATOR_DEVICE="${EMULATOR_DEVICE}" -e WEB_VNC=true --device /dev/kvm ^
-                        -v "${WORKSPACE_PATH}:/workspace" -v "C:/apk-files:/apk-files" ^
+                        -v "${WORKSPACE_PATH}:/workspace" ^
                         --name android-container budtmo/docker-android:emulator_14.0
                     """
                 }
@@ -256,7 +255,8 @@ pipeline {
 
                     while (attempt <= maxAttempts && !success) {
                         echo "Attempt ${attempt}: Installing APK..."
-                        def result = bat(returnStatus: true, script: 'docker exec android-container adb install /apk-files/Android.apk')
+                        def apkFileName = APK_PATH.split('/')[-1]
+                        def result = bat(returnStatus: true, script: "docker exec android-container adb install /workspace/${apkFileName}")
                         if (result == 0) {
                             echo "APK installed successfully!"
                             success = true
@@ -288,8 +288,6 @@ pipeline {
                     echo "Running Maven tests from /workspace with JDK 17 settings..."
                     bat '''
                         docker exec android-container bash -c "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH && cd /workspace && mvn clean test -Dcucumber.plugin=pretty -Dandroid.maven.plugin.skip=true"
-                        docker exec android-container ls -l /workspace/src/test/java/project/test/swag/stepDef
-                        docker exec android-container ls -l /workspace/src/test/java/project/test/swag/runners
                     '''
                 }
             }
