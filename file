@@ -3,8 +3,7 @@ pipeline {
 
     environment {
         EMULATOR_DEVICE = "Samsung Galaxy S10"
-        APK_PATH = "C:/apk-files/Android.apk"
-        // Convert Windows workspace path to Unix-friendly format
+        APK_PATH = "${WORKSPACE}/Android.SauceLabs.Mobile.Sample.app.2.7.1.apk"
         WORKSPACE_PATH = pwd().replace("\\", "/")
     }
 
@@ -18,14 +17,14 @@ pipeline {
         stage('Start Fresh Docker Container') {
             steps {
                 script {
-                    echo "🛠 Removing any existing container..."
+                    echo "Removing any existing container..."
                     bat 'docker rm -f android-container || echo No container to remove'
 
-                    echo "🚀 Starting a new container..."
+                    echo "Starting a new container..."
                     bat """
                         docker run -d -p 6080:6080 -p 4723:4723 ^
                         -e EMULATOR_DEVICE="${EMULATOR_DEVICE}" -e WEB_VNC=true --device /dev/kvm ^
-                        -v "${WORKSPACE_PATH}:/workspace" -v "C:/apk-files:/apk-files" ^
+                        -v "${WORKSPACE_PATH}:/workspace" ^
                         --name android-container budtmo/docker-android:emulator_14.0
                     """
                 }
@@ -35,7 +34,7 @@ pipeline {
         stage('Wait for Emulator to Start') {
             steps {
                 script {
-                    echo "⏳ Waiting for emulator to start (2 minutes)..."
+                    echo "Waiting for emulator to start (2 minutes)..."
                     bat 'ping -n 10 127.0.0.1 >nul'
                 }
             }
@@ -44,7 +43,7 @@ pipeline {
         stage('Verify ADB Connection') {
             steps {
                 script {
-                    echo "🔍 Checking if emulator is detected by ADB..."
+                    echo "Checking if emulator is detected by ADB..."
                     bat 'docker exec android-container adb devices'
                 }
             }
@@ -80,19 +79,20 @@ pipeline {
                     def success = false
 
                     while (attempt <= maxAttempts && !success) {
-                        echo "📦 Attempt ${attempt}: Installing APK..."
-                        def result = bat(returnStatus: true, script: 'docker exec android-container adb install /apk-files/Android.apk')
+                        echo "Attempt ${attempt}: Installing APK..."
+                        def apkFileName = APK_PATH.split('/')[-1]
+                        def result = bat(returnStatus: true, script: "docker exec android-container adb install /workspace/${apkFileName}")
                         if (result == 0) {
-                            echo "✅ APK installed successfully!"
+                            echo "APK installed successfully!"
                             success = true
                         } else {
-                            echo "❌ APK installation failed. Retrying in 5 seconds..."
+                            echo "APK installation failed. Retrying in 5 seconds..."
                             sleep(5)
                             attempt++
                         }
                     }
                     if (!success) {
-                        error("❌ APK installation failed after ${maxAttempts} attempts. Stopping pipeline.")
+                        error("APK installation failed after ${maxAttempts} attempts. Stopping pipeline.")
                     }
                 }
             }
@@ -113,8 +113,6 @@ pipeline {
                     echo "Running Maven tests from /workspace with JDK 17 settings..."
                     bat '''
                         docker exec android-container bash -c "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH && cd /workspace && mvn clean test -Dcucumber.plugin=pretty -Dandroid.maven.plugin.skip=true"
-                        docker exec android-container ls -l /workspace/src/test/java/project/test/swag/stepDef
-                        docker exec android-container ls -l /workspace/src/test/java/project/test/swag/runners
                     '''
                 }
             }
