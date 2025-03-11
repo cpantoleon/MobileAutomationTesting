@@ -39,15 +39,15 @@ public class ScrollFunctionality {
         int width = driver.manage().window().getSize().width;
 
         int startX = width / 2;
-        int startY = (int) (height * 0.8);
-        int endY = (int) (height * 0.2);
+        int startY = (int) (height * 0.7);
+        int endY = (int) (height * 0.4);
 
         PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
         Sequence scroll = new Sequence(finger, 0)
                 .addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), startX, startY))
                 .addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()))
-                .addAction(new Pause(finger, Duration.ofMillis(500)))
-                .addAction(finger.createPointerMove(Duration.ofMillis(500), PointerInput.Origin.viewport(), startX, endY))
+                .addAction(new Pause(finger, Duration.ofMillis(100)))
+                .addAction(finger.createPointerMove(Duration.ofMillis(300), PointerInput.Origin.viewport(), startX, endY))
                 .addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
 
         driver.perform(Collections.singletonList(scroll));
