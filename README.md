@@ -1,4 +1,25 @@
-# Mobile Automation Testing with Appium, Selenium, and Serenity
+# Mobile Automation Testing with Appium and Selenium
+
+## Table of Contents
+- [Overview](#overview)
+- [Technologies Used](#technologies-used)
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+- [Java and Maven Setup on Windows](#java-and-maven-setup-on-windows)
+  - [Java Setup on Windows](#java-setup-on-windows)
+  - [Maven Setup on Windows](#maven-setup-on-windows)
+  - [Summary](#summary)
+- [Installation & Setup](#installation--setup)
+  - [1. Clone the Repository](#1-clone-the-repository)
+  - [2. Install Dependencies](#2-install-dependencies)
+  - [3. Install Appium](#3-install-appium)
+  - [4. Set Up an Android Emulator](#4-set-up-an-android-emulator)
+  - [5. Run Tests Locally](#5-run-tests-locally)
+  - [Installing Docker on Windows (Using WSL)](#installing-docker-on-windows-using-wsl)
+- [Jenkins Configuration](#jenkins-configuration)
+- [Running Tests in Dockerized Emulator (via Jenkins Pipeline)](#running-tests-in-dockerized-emulator-via-jenkins-pipeline)
+- [Logs & Reports](#logs--reports)
+- [Cleanup](#cleanup)
 
 ## Overview
 This project is a **mobile automation testing framework** that leverages **Appium**, **Selenium**, **Serenity BDD**, and **Cucumber** to automate mobile applications. The testing framework is built using **Maven** and supports **JUnit 5** for test execution.
