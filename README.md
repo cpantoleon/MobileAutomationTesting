@@ -15,7 +15,7 @@
   - [3. Install Appium](#3-install-appium)
   - [4. Set Up an Android Emulator](#4-set-up-an-android-emulator)
   - [5. Run Tests Locally](#5-run-tests-locally)
-  - [Installing Docker on Windows (Using WSL)](#installing-docker-on-windows-using-wsl)
+- [Installing Docker on Windows (Using WSL)](#installing-docker-on-windows-using-wsl)
 - [Jenkins Configuration](#jenkins-configuration)
 - [Running Tests in Dockerized Emulator (via Jenkins Pipeline)](#running-tests-in-dockerized-emulator-via-jenkins-pipeline)
 - [Logs & Reports](#logs--reports)
@@ -169,7 +169,7 @@ After setting up **Appium** and the **Android Emulator**, you can run your tests
 mvn clean test -Dcucumber.plugin=pretty
 ```
 
-### Installing Docker on Windows (Using WSL)
+## Installing Docker on Windows (Using WSL)
 If you are using **Windows**, install and update **Windows Subsystem for Linux (WSL)** before installing Docker:
 ```sh
 wsl --install
