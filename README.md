@@ -253,7 +253,45 @@ npm install -g appium
 ```
 
 ### 4. Set Up an Android Emulator
-Refer to the original README for detailed steps on setting up an Android emulator.
+You can run tests using either an Android Emulator or a real device. Here's how to set up an Android Emulator:
+
+#### Install Android Studio
+1. Download and install **Android Studio** from [here](https://developer.android.com/studio).
+2. Open **Android Studio** and go to **Configure** → **SDK Manager**.
+3. In the **SDK Tools** tab, check the box for **Android Emulator** and **Android SDK** (if not already installed).
+4. Click **Apply** to install the necessary components.
+
+#### Create an Emulator
+1. Open **AVD Manager** (Android Virtual Device Manager) from **Android Studio**.
+2. Click **Create Virtual Device** and choose a device model (e.g., **Pixel 4**).
+3. Select a **System Image** (e.g., **Android 11**) and click **Next**.
+4. Configure the emulator settings and click **Finish**.
+
+#### Start the Emulator
+Start the emulator either through **Android Studio** or using the **AVD Manager**.
+
+Alternatively, you can start the emulator using the following command from the terminal:
+
+```sh
+emulator -avd <name_of_your_avd>
+```
+
+#### Install the APK on the Emulator
+
+After setting up the **Android Emulator**, you can install the **APK** onto it. Here's how:
+
+1. **Build the APK**: 
+   - Ensure you have the APK file that you want to install on the emulator. If you don't have it, you may need to build the app first.
+
+2. **Start the Emulator**: 
+   - Ensure your **Android Emulator** is running.
+
+3. **Install the APK**:
+   - Open a terminal window and use the following command to install the APK onto the running emulator:
+   
+```sh
+   adb -s <emulator_name> install <path_to_your_apk>.apk
+```
 
 ### 5. Run Tests Locally
 ```sh
