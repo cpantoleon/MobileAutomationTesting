@@ -8,7 +8,9 @@
 - [Java and Maven Setup on Windows](#java-and-maven-setup-on-windows)
   - [Java Setup on Windows](#java-setup-on-windows)
   - [Maven Setup on Windows](#maven-setup-on-windows)
-  - [Summary](#summary)
+  - [Environment Variable Configuration](#environment-variable-configuration)
+  - [Verification Steps](#verification-steps)
+  - [Troubleshooting](#troubleshooting)
 - [Installation & Setup](#installation--setup)
   - [1. Clone the Repository](#1-clone-the-repository)
   - [2. Install Dependencies](#2-install-dependencies)
@@ -54,41 +56,176 @@ Additionally, a **Jenkins pipeline** is included to automate the setup of a **Do
 5. **Docker** (For running Android emulator inside a container)
 6. **Jenkins** (If running tests via CI/CD pipeline)
 
-# Java and Maven Setup on Windows
+## Java and Maven Setup on Windows
 
-## Java Setup on Windows
+### Java Setup on Windows
 
-### Official Java Installation (Oracle JDK)
-- [Download Oracle JDK](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+#### 1. Download and Install Java 17
+Choose one of the following options:
 
-### OpenJDK Installation on Windows
-- [OpenJDK Downloads](https://adoptopenjdk.net/)
+**Option 1: Oracle JDK 17**
+- Download from [Oracle JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+- Run the installer and follow the on-screen instructions
+- Note the installation path (typically `C:\Program Files\Java\jdk-17`)
 
-### Setting the JAVA_HOME Environment Variable
-- [How to Set JAVA_HOME on Windows](https://www.baeldung.com/java-home-on-windows-mac-os-x-linux)
-    
+**Option 2: OpenJDK 17**
+- Download from [Eclipse Temurin (Adoptium)](https://adoptium.net/temurin/releases/?version=17)
+- Run the installer and follow the on-screen instructions
+- Note the installation path (typically `C:\Program Files\Eclipse Adoptium\jdk-17.x.x.x-hotspot`)
+
+#### 2. Set JAVA_HOME Environment Variable
+1. Press `Win + R`, type `sysdm.cpl`, and press **Enter**
+2. Go to the **Advanced** tab and click **Environment Variables**
+3. Under **System Variables**, click **New**
+4. Set Variable name as `JAVA_HOME`
+5. Set Variable value as your Java installation path (e.g., `C:\Program Files\Java\jdk-17`)
+6. Click **OK**
+
 ---
 
-## Maven Setup on Windows
+### Maven Setup on Windows
 
-### Official Maven Installation Guide
-- [Maven Installation Guide for Windows](https://maven.apache.org/install.html)
- 
-### Configure Maven
-- [Configuration of Maven](https://www.qamadness.com/knowledge-base/how-to-install-maven-and-configure-environment-variables/)
-    
-### Configuring settings.xml in Maven
-- [Maven settings.xml Documentation](https://maven.apache.org/settings.html)
+#### 1. Download and Install Maven
+1. Download the latest Maven binary from [Maven's official website](https://maven.apache.org/download.cgi) (choose the Binary zip archive)
+2. Extract the downloaded zip file to a location of your choice (e.g., `C:\Program Files\Apache\maven`)
+
+#### 2. Set Maven Environment Variables
+1. Press `Win + R`, type `sysdm.cpl`, and press **Enter**
+2. Go to the **Advanced** tab and click **Environment Variables**
+3. Under **System Variables**, click **New**
+4. Set Variable name as `MAVEN_HOME`
+5. Set Variable value as your Maven installation path (e.g., `C:\Program Files\Apache\maven`)
+6. Click **OK**
+
+#### 3. Configure Maven settings.xml (Optional)
+The `settings.xml` file allows you to customize Maven's behavior:
+
+1. Navigate to `%MAVEN_HOME%\conf` or create a `.m2` directory in your user home directory
+2. Create or edit `settings.xml` with the following template:
+
+```xml
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                              http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <!-- Optional: Proxy settings if you're behind a corporate firewall -->
+  <!--
+  <proxies>
+    <proxy>
+      <id>optional</id>
+      <active>true</active>
+      <protocol>http</protocol>
+      <host>proxy.company.com</host>
+      <port>8080</port>
+      <nonProxyHosts>localhost|127.0.0.1</nonProxyHosts>
+    </proxy>
+  </proxies>
+  -->
+  
+  <!-- Optional: Mirror settings for faster downloads -->
+  <mirrors>
+    <mirror>
+      <id>maven-default-http-blocker</id>
+      <mirrorOf>external:http:*</mirrorOf>
+      <name>Pseudo repository to mirror external repositories initially using HTTP.</name>
+      <url>http://0.0.0.0/</url>
+      <blocked>true</blocked>
+    </mirror>
+  </mirrors>
+</settings>
+```
 
 ---
 
-## Summary
+### Environment Variable Configuration
 
-- **Java Setup**: Install Java JDK and set JAVA_HOME.
-- **Maven Setup**: Install Maven and configure MAVEN_HOME and PATH.
-- **settings.xml Configuration**: Configure your Maven settings.xml file for repositories, proxies, and profiles.
+#### Update PATH Variable
+1. Press `Win + R`, type `sysdm.cpl`, and press **Enter**
+2. Go to the **Advanced** tab and click **Environment Variables**
+3. Under **System Variables**, find the `Path` variable and click **Edit**
+4. Click **New** and add the following paths:
+   ```
+   %JAVA_HOME%\bin
+   %MAVEN_HOME%\bin
+   ```
+5. Click **OK** to save all changes
 
-By following these links, you will be able to properly configure Java, Maven, and the settings.xml file on Windows. If you encounter any issues, these resources should also help you with troubleshooting the common setup problems.
+---
+
+### Verification Steps
+
+After setting up Java and Maven, open a **new** Command Prompt window and run the following commands to verify the installation:
+
+#### 1. Verify Java Installation
+```sh
+java -version
+```
+Expected output (example):
+```
+openjdk version "17.0.6" 2023-01-17
+OpenJDK Runtime Environment Temurin-17.0.6+10 (build 17.0.6+10)
+OpenJDK 64-Bit Server VM Temurin-17.0.6+10 (build 17.0.6+10, mixed mode, sharing)
+```
+
+#### 2. Verify JAVA_HOME
+```sh
+echo %JAVA_HOME%
+```
+Expected output (example):
+```
+C:\Program Files\Java\jdk-17
+```
+
+#### 3. Verify Maven Installation
+```sh
+mvn -version
+```
+Expected output (example):
+```
+Apache Maven 3.9.2 (c9616018c7a021c1c39be70fb2843d6f5f9b8a1c)
+Maven home: C:\Program Files\Apache\maven
+Java version: 17.0.6, vendor: Eclipse Adoptium, runtime: C:\Program Files\Eclipse Adoptium\jdk-17.0.6.10-hotspot
+Default locale: en_US, platform encoding: Cp1252
+OS name: "windows 11", version: "10.0", arch: "amd64", family: "windows"
+```
+
+#### 4. Verify MAVEN_HOME
+```sh
+echo %MAVEN_HOME%
+```
+Expected output (example):
+```
+C:\Program Files\Apache\maven
+```
+
+---
+
+### Troubleshooting
+
+If you encounter issues with Java or Maven setup, try the following:
+
+#### Java Not Found or Wrong Version
+1. Ensure `JAVA_HOME` points to the correct Java 17 installation directory
+2. Verify that `%JAVA_HOME%\bin` is in your `PATH`
+3. If using multiple Java versions, ensure Java 17 appears first in your `PATH`
+
+#### Maven Not Found
+1. Ensure `MAVEN_HOME` points to the correct Maven installation directory
+2. Verify that `%MAVEN_HOME%\bin` is in your `PATH`
+3. Try restarting your Command Prompt
+
+#### Command Prompt Doesn't Recognize Environment Variables
+1. Restart your Command Prompt after making changes to environment variables
+2. If issues persist, restart your computer
+
+#### Maven Build Fails
+1. Ensure your `settings.xml` is correctly configured
+2. Check your network connection (especially if using a corporate proxy)
+3. Run `mvn clean` before attempting to build again
+
+---
+
+With these steps, you should have Java 17 and Maven correctly installed and configured on Windows. 🚀
 
 ## Installation & Setup
 ### 1. Clone the Repository
@@ -114,57 +251,11 @@ After installing Node.js, install **Appium** globally using the following comman
 ```sh
 npm install -g appium
 ```
-**Start the Appium Server with Custom Configuration**
-To run Appium with the specific address, port, and base path as required, use this command:
-```sh
-appium --address 0.0.0.0 --port 4723 --base-path /wd/hub
-```
-This command starts the Appium server and makes it listen on `0.0.0.0` (accessible from any IP address), at port `4723`, with a custom base path of `/wd/hub`.
 
 ### 4. Set Up an Android Emulator
-You can run tests using either an Android Emulator or a real device. Here's how to set up an Android Emulator:
-
-#### Install Android Studio
-1. Download and install **Android Studio** from [here](https://developer.android.com/studio).
-2. Open **Android Studio** and go to **Configure** → **SDK Manager**.
-3. In the **SDK Tools** tab, check the box for **Android Emulator** and **Android SDK** (if not already installed).
-4. Click **Apply** to install the necessary components.
-
-#### Install the APK on the Emulator
-
-After setting up the **Android Emulator**, you can install the **APK** onto it. Here's how:
-
-1. **Build the APK**: 
-   - Ensure you have the APK file that you want to install on the emulator. If you don't have it, you may need to build the app first.
-
-2. **Start the Emulator**: 
-   - Ensure your **Android Emulator** is running.
-
-3. **Install the APK**:
-   - Open a terminal window and use the following command to install the APK onto the running emulator:
-
-   ```sh
-   adb -s <emulator_name> install <path_to_your_apk>.apk
-   ```
-
-#### Create an Emulator
-1. Open **AVD Manager** (Android Virtual Device Manager) from **Android Studio**.
-2. Click **Create Virtual Device** and choose a device model (e.g., **Pixel 4**).
-3. Select a **System Image** (e.g., **Android 11**) and click **Next**.
-4. Configure the emulator settings and click **Finish**.
-
-#### Start the Emulator
-Start the emulator either through **Android Studio** or using the **AVD Manager**.
-
-Alternatively, you can start the emulator using the following command from the terminal:
-
-```sh
-emulator -avd <name_of_your_avd>
-```
+Refer to the original README for detailed steps on setting up an Android emulator.
 
 ### 5. Run Tests Locally
-After setting up **Appium** and the **Android Emulator**, you can run your tests locally. Use the following Maven command to run the tests:
-
 ```sh
 mvn clean test -Dcucumber.plugin=pretty
 ```
