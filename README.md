@@ -3,7 +3,6 @@
 ## Table of Contents
 - [Overview](#overview)
 - [Technologies Used](#technologies-used)
-- [Project Structure](#project-structure)
 - [Prerequisites](#prerequisites)
 - [Java and Maven Setup on Windows](#java-and-maven-setup-on-windows)
   - [Java Setup on Windows](#java-setup-on-windows)
@@ -38,14 +37,6 @@ Additionally, a **Jenkins pipeline** is included to automate the setup of a **Do
 - **SnakeYAML** (YAML Parsing)
 - **Docker** (Containerization for Android Emulator)
 - **Jenkins** (CI/CD Automation)
-
-## Project Structure
-```
-|-- src/test/java/project/test/swag
-|   |-- stepDef  # Step Definitions for Cucumber Scenarios
-|   |-- runners  # Cucumber Test Runners
-|-- pom.xml  # Maven Configuration with Dependencies
-```
 
 ## Prerequisites
 ### Install the following before running tests:
